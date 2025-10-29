@@ -80,6 +80,19 @@
         .grid { grid-template-columns: 1fr; }
         header { position: static; }
       }
+      /* Notes app styles */
+      .notes-app{display:grid;grid-template-columns:280px 1fr;gap:16px}
+      .notes-list{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;overflow:hidden}
+      .notes-list-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(148,163,184,.15)}
+      .notes-list ul{list-style:none;margin:0;padding:0;max-height:360px;overflow:auto}
+      .notes-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;cursor:pointer;border-bottom:1px dashed rgba(148,163,184,.12)}
+      .notes-list li.active{background:rgba(96,165,250,.12)}
+      .notes-editor .title{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:var(--text);margin-bottom:10px}
+      .notes-editor textarea{width:100%;min-height:260px;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:#cbd5e1;resize:vertical}
+      .notes-toolbar{display:flex;gap:8px;margin:10px 0 0}
+      .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));color:var(--text);cursor:pointer}
+      .btn.danger{background:linear-gradient(135deg, rgba(239,68,68,.25), rgba(239,68,68,.15));}
+
     </style>
   </head>
   <body>
@@ -132,6 +145,29 @@
           <h2>연락</h2>
           <p>문의: <a href="mailto:you@example.com">you@example.com</a></p>
         </section>
+              <section id="notes" class="section">
+          <h2>메모장</h2>
+          <p class="muted">브라우저에 자동 저장됩니다(로컬 저장소). 기기/브라우저를 바꾸면 보이지 않을 수 있어요.</p>
+          <div class="notes-app">
+            <div class="notes-list card">
+              <div class="notes-list-header">
+                <strong>메모 목록</strong>
+                <button class="btn" id="newNoteBtn" type="button">+ 새 메모</button>
+              </div>
+              <ul id="notesUl" aria-label="메모 목록"></ul>
+            </div>
+            <div class="notes-editor">
+              <input class="title" id="noteTitle" placeholder="제목 없음" />
+              <textarea id="noteBody" placeholder="여기에 내용을 입력하세요"></textarea>
+              <div class="notes-toolbar">
+                <button class="btn" id="exportBtn" type="button">백업 내보내기</button>
+                <label class="btn" for="importFile">백업 불러오기</label>
+                <input id="importFile" type="file" accept="application/json" style="display:none" />
+                <button class="btn danger" id="deleteBtn" type="button">삭제</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer class="footer">© <span id="y"></span> 내 브랜드 — 모두의 웹을 응원합니다.</footer>
@@ -139,6 +175,124 @@
 
     <script>
       document.getElementById('y').textContent = new Date().getFullYear();
+          // === Notes App (localStorage 기반) ===
+      (function(){
+        const STORAGE_KEY = 'notes-v1';
+        const state = { notes: {}, order: [], currentId: null, saveTimer: null };
+        const els = {
+          ul: document.getElementById('notesUl'),
+          title: document.getElementById('noteTitle'),
+          body: document.getElementById('noteBody'),
+          newBtn: document.getElementById('newNoteBtn'),
+          delBtn: document.getElementById('deleteBtn'),
+          exportBtn: document.getElementById('exportBtn'),
+          importFile: document.getElementById('importFile'),
+        };
+
+        function load(){
+          try{
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if(raw){ const data = JSON.parse(raw); Object.assign(state, {notes:data.notes||{}, order:data.order||[]}); }
+          }catch(e){ console.warn('Load failed', e); }
+          if(state.order.length===0){ createNote(); }
+          else { select(state.order[0]); }
+          renderList();
+        }
+
+        function persist(){
+          const data = { notes: state.notes, order: state.order };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function uid(){ return 'n_'+Math.random().toString(36).slice(2,9); }
+
+        function createNote(){
+          const id = uid();
+          state.notes[id] = { title: '새 메모', body: '', updated: Date.now() };
+          state.order.unshift(id);
+          select(id);
+          renderList();
+          persist();
+        }
+
+        function removeNote(id){
+          const idx = state.order.indexOf(id);
+          if(idx>-1) state.order.splice(idx,1);
+          delete state.notes[id];
+          if(state.order.length){ select(state.order[0]); }
+          else { createNote(); }
+          renderList();
+          persist();
+        }
+
+        function select(id){
+          state.currentId = id;
+          const n = state.notes[id];
+          els.title.value = n?.title || '';
+          els.body.value = n?.body || '';
+          renderList();
+        }
+
+        function renderList(){
+          els.ul.innerHTML = '';
+          state.order.forEach(id=>{
+            const n = state.notes[id];
+            const li = document.createElement('li');
+            li.className = state.currentId===id ? 'active' : '';
+            const span = document.createElement('span');
+            span.textContent = n.title || '제목 없음';
+            const small = document.createElement('small');
+            small.style.color='var(--muted)';
+            small.textContent = new Date(n.updated).toLocaleString();
+            li.appendChild(span); li.appendChild(small);
+            li.addEventListener('click', ()=> select(id));
+            els.ul.appendChild(li);
+          });
+        }
+
+        function scheduleSave(){
+          clearTimeout(state.saveTimer);
+          state.saveTimer = setTimeout(()=>{
+            const id = state.currentId; if(!id) return;
+            const n = state.notes[id]; if(!n) return;
+            n.title = els.title.value.trim() || '제목 없음';
+            n.body = els.body.value; n.updated = Date.now();
+            // 최신 순 정렬
+            state.order = state.order.filter(x=>x!==id); state.order.unshift(id);
+            renderList();
+            persist();
+          }, 400);
+        }
+
+        // events
+        els.newBtn.addEventListener('click', createNote);
+        els.delBtn.addEventListener('click', ()=>{ if(state.currentId){ if(confirm('이 메모를 삭제할까요?')) removeNote(state.currentId); }});
+        els.title.addEventListener('input', scheduleSave);
+        els.body.addEventListener('input', scheduleSave);
+
+        els.exportBtn.addEventListener('click', ()=>{
+          const blob = new Blob([JSON.stringify({notes:state.notes, order:state.order}, null, 2)], {type:'application/json'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = 'notes-backup.json'; a.click();
+          URL.revokeObjectURL(url);
+        });
+        els.importFile.addEventListener('change', (e)=>{
+          const file = e.target.files[0]; if(!file) return;
+          const reader = new FileReader();
+          reader.onload = ()=>{
+            try{
+              const data = JSON.parse(reader.result);
+              state.notes = data.notes || {}; state.order = data.order || Object.keys(state.notes);
+              select(state.order[0]); renderList(); persist();
+            }catch(err){ alert('가져오기에 실패했습니다: '+err.message); }
+          };
+          reader.readAsText(file);
+        });
+
+        load();
+      })();
+
     </script>
   </body>
 </html>
