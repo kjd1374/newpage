@@ -3,86 +3,39 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>나의 첫 웹페이지</title>
-    <meta name="description" content="간단하고 가벼운 랜딩 페이지 템플릿" />
-    <meta property="og:title" content="나의 첫 웹페이지" />
-    <meta property="og:description" content="이 페이지는 깔끔한 1파일 템플릿입니다." />
-    <meta property="og:type" content="website" />
+    <title>나의 첫 웹페이지 + 메모 동기화</title>
+    <meta name="description" content="GitHub Pages에 배포되는 랜딩 + 메모 앱" />
+    <meta property="og:title" content="나의 첫 웹페이지 + 메모 동기화" />
+    <meta property="og:description" content="브라우저 로컬 저장 + GitHub 동기화 메모" />
     <style>
-      :root {
-        --bg: #0f172a;         /* slate-900 */
-        --card: #111827;       /* gray-900 */
-        --text: #e5e7eb;       /* gray-200 */
-        --muted: #9ca3af;      /* gray-400 */
-        --primary: #60a5fa;    /* blue-400 */
-        --accent: #34d399;     /* emerald-400 */
-        --ring: rgba(96,165,250,.6);
-      }
-      * { box-sizing: border-box; }
-      html, body { height: 100%; }
-      body {
-        margin: 0;
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, Malgun Gothic, Helvetica Neue, Arial, "Noto Sans KR", sans-serif;
-        background: radial-gradient(1200px 600px at 80% -10%, rgba(52,211,153,.15), transparent 60%),
-                    radial-gradient(1000px 500px at -10% 10%, rgba(96,165,250,.18), transparent 60%),
-                    var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-      }
-      .container {
-        max-width: 1080px; margin: 0 auto; padding: 24px;
-      }
-      header {
-        display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 12px 0 24px; position: sticky; top: 0; backdrop-filter: blur(8px);
-      }
-      .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-      .logo-badge {
-        width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--accent));
-        box-shadow: 0 8px 24px rgba(52,211,153,.25), 0 8px 24px rgba(96,165,250,.2);
-      }
-      .logo-title { font-weight: 700; letter-spacing: .2px; color: var(--text); }
-      .nav a { color: var(--muted); text-decoration: none; margin-left: 18px; font-size: 14px; }
-      .nav a:hover { color: var(--text); }
+      :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --primary:#60a5fa; --accent:#34d399; --ring:rgba(96,165,250,.6); }
+      *{box-sizing:border-box} html,body{height:100%}
+      body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Apple SD Gothic Neo,Malgun Gothic,Helvetica Neue,Arial,"Noto Sans KR",sans-serif;background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(52,211,153,.15), transparent 60%),
+        radial-gradient(1000px 500px at -10% 10%, rgba(96,165,250,.18), transparent 60%), var(--bg); color:var(--text); line-height:1.6}
+      .container{max-width:1080px;margin:0 auto;padding:24px}
+      header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 24px}
+      .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+      .logo-badge{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 8px 24px rgba(52,211,153,.25),0 8px 24px rgba(96,165,250,.2)}
+      .logo-title{font-weight:700;letter-spacing:.2px;color:var(--text)}
+      .nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:14px}
+      .nav a:hover{color:var(--text)}
+      .hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:32px;align-items:center;padding:48px 0}
+      .hero h1{font-size:clamp(28px,5vw,48px);line-height:1.15;margin:0 0 12px}
+      .hero p{color:var(--muted);margin:0 0 24px;font-size:16px}
+      .cta{display:inline-flex;gap:12px;align-items:center;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(52,211,153,.15));color:var(--text);text-decoration:none;border:1px solid rgba(148,163,184,.2);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+      .cta:focus{outline:3px solid var(--ring);outline-offset:2px}
+      .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+      .grid .card h3{margin:0 0 6px;font-size:18px}
+      .grid .card p{margin:0;color:var(--muted);font-size:14px}
+      .code{font-family:ui-monospace,Menlo,Consolas,monospace;border-radius:12px;padding:14px;background:#0b1324;color:#cbd5e1;font-size:13px;overflow-x:auto;border:1px solid rgba(148,163,184,.15)}
+      .section{padding:40px 0}
+      .footer{color:var(--muted);font-size:13px;padding:36px 0 24px;text-align:center}
 
-      .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: center; padding: 48px 0; }
-      .hero h1 { font-size: clamp(28px, 5vw, 48px); line-height: 1.15; margin: 0 0 12px; }
-      .hero p { color: var(--muted); margin: 0 0 24px; font-size: 16px; }
-      .cta {
-        display: inline-flex; gap: 12px; align-items: center; padding: 12px 18px; border-radius: 12px;
-        background: linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));
-        color: var(--text); text-decoration: none; border: 1px solid rgba(148,163,184,.2);
-        box-shadow: 0 8px 24px rgba(0,0,0,.25);
-      }
-      .cta:focus { outline: 3px solid var(--ring); outline-offset: 2px; }
-      .card {
-        background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-        border: 1px solid rgba(148,163,184,.15);
-        border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      }
-
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-      .grid .card h3 { margin: 0 0 6px; font-size: 18px; }
-      .grid .card p { margin: 0; color: var(--muted); font-size: 14px; }
-
-      .code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
-        border-radius: 12px; padding: 14px; background: #0b1324; color: #cbd5e1; font-size: 13px;
-        overflow-x: auto; border: 1px solid rgba(148,163,184,.15);
-      }
-
-      .section { padding: 40px 0; }
-
-      .footer { color: var(--muted); font-size: 13px; padding: 36px 0 24px; text-align: center; }
-
-      @media (max-width: 920px) {
-        .hero { grid-template-columns: 1fr; }
-        .grid { grid-template-columns: 1fr; }
-        header { position: static; }
-      }
-      /* Notes app styles */
+      /* Notes app */
       .notes-app{display:grid;grid-template-columns:280px 1fr;gap:16px}
-      .notes-list{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;overflow:hidden}
+      .notes-list{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;overflow:hidden}
       .notes-list-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(148,163,184,.15)}
       .notes-list ul{list-style:none;margin:0;padding:0;max-height:360px;overflow:auto}
       .notes-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;cursor:pointer;border-bottom:1px dashed rgba(148,163,184,.12)}
@@ -90,15 +43,14 @@
       .notes-editor .title{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:var(--text);margin-bottom:10px}
       .notes-editor textarea{width:100%;min-height:260px;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:#cbd5e1;resize:vertical}
       .notes-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
-      .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));color:var(--text);cursor:pointer}
-      .btn.danger{background:linear-gradient(135deg, rgba(239,68,68,.25), rgba(239,68,68,.15));}
-      .gh-card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;padding:12px}
+      .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(52,211,153,.15));color:var(--text);cursor:pointer}
+      .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,.25),rgba(239,68,68,.15))}
+      .gh-card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;padding:12px}
       .gh-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
       .gh-grid input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:var(--text)}
       .gh-grid small{grid-column:1/-1;color:var(--muted)}
-      .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));color:var(--text);cursor:pointer}
-      .btn.danger{background:linear-gradient(135deg, rgba(239,68,68,.25), rgba(239,68,68,.15));}
 
+      @media (max-width:920px){ .hero{grid-template-columns:1fr} .grid{grid-template-columns:1fr} .notes-app{grid-template-columns:1fr} }
     </style>
   </head>
   <body>
@@ -111,50 +63,45 @@
         <nav class="nav" aria-label="주요 링크">
           <a href="#features">특징</a>
           <a href="#getting-started">시작하기</a>
-          <a href="#contact">연락</a>
+          <a href="#notes">메모장</a>
         </nav>
       </header>
 
       <main>
         <section class="hero">
           <div>
-            <h1>아무 데서나 접속 가능한 <br/>나만의 웹페이지</h1>
-            <p>이 템플릿 파일 하나만으로도 반응형 · 접근성 · SEO 메타 태그가 포함된 깔끔한 랜딩 페이지를 바로 배포할 수 있어요.</p>
-            <a class="cta" href="#getting-started">지금 배포해보기 →</a>
+            <h1>아무 데서나 접속 가능한<br/>나만의 웹페이지 + 메모</h1>
+            <p>이 템플릿은 반응형 · 접근성 · SEO 메타 태그와 함께 <b>메모장 + GitHub 동기화</b>까지 내장되어 있어요.</p>
+            <a class="cta" href="#notes">메모 시작하기 →</a>
           </div>
           <div class="card">
-            <pre class="code" aria-label="예시 코드"><code>&lt;!-- index.html --&gt;
-&lt;h1&gt;안녕하세요!&lt;/h1&gt;
-&lt;p&gt;여기에 내용을 넣고, GitHub Pages나 Vercel, Cloudflare Pages로 배포하세요!&lt;/p&gt;</code></pre>
+            <pre class="code"><code>&lt;!-- index.html --&gt;
+메모는 브라우저에 자동 저장되고,
+원할 때 GitHub에 동기화할 수 있어요.</code></pre>
           </div>
         </section>
 
         <section id="features" class="section">
           <h2>특징</h2>
           <div class="grid">
-            <div class="card"><h3>가벼움</h3><p>의존성 0, 파일 1개로 시작합니다.</p></div>
-            <div class="card"><h3>반응형</h3><p>모바일과 데스크톱에서 모두 보기 좋게.</p></div>
-            <div class="card"><h3>확장성</h3><p>React/Next.js로 쉽게 확장 가능합니다.</p></div>
+            <div class="card"><h3>가벼움</h3><p>의존성 없이 HTML 1파일로 시작.</p></div>
+            <div class="card"><h3>반응형</h3><p>모바일과 데스크톱 모두 깔끔.</p></div>
+            <div class="card"><h3>동기화</h3><p>GitHub에 JSON으로 저장/복원.</p></div>
           </div>
         </section>
 
         <section id="getting-started" class="section">
           <h2>시작하기</h2>
           <ol>
-            <li>이 파일을 <strong>index.html</strong>로 저장합니다.</li>
-            <li>원하는 호스팅(예: GitHub Pages, Vercel, Cloudflare Pages)에 업로드/배포합니다.</li>
-            <li>공유 가능한 URL을 받아 어디서나 접속합니다.</li>
+            <li>이 파일을 <b>index.html</b>로 저장해 GitHub Pages에 배포</li>
+            <li>아래 메모장에서 내용을 작성</li>
+            <li>원할 때 <b>GitHub에 업로드</b>로 동기화</li>
           </ol>
-        </section>
-
-        <section id="contact" class="section">
-          <h2>연락</h2>
-          <p>문의: <a href="mailto:you@example.com">you@example.com</a></p>
         </section>
 
         <section id="notes" class="section">
           <h2>메모장</h2>
-          <p class="muted">브라우저에 자동 저장됩니다(로컬 저장소). 여러 기기에서 보려면 아래 <strong>GitHub 동기화</strong>를 설정하세요.</p>
+          <p class="muted">브라우저에 자동 저장됩니다(로컬 저장소). 여러 기기에서 보려면 아래 <b>GitHub 동기화</b>를 사용하세요.</p>
           <div class="notes-app">
             <div class="notes-list card">
               <div class="notes-list-header">
@@ -172,6 +119,7 @@
                 <input id="importFile" type="file" accept="application/json" style="display:none" />
                 <button class="btn danger" id="deleteBtn" type="button">삭제</button>
               </div>
+
               <div class="gh-card" style="margin-top:12px">
                 <details>
                   <summary>🔄 GitHub 동기화 설정 (접어서 보기)</summary>
@@ -181,7 +129,7 @@
                     <input id="ghBranch" placeholder="branch (예: main)" value="main">
                     <input id="ghPath" placeholder="path (예: notes.json)" value="notes.json">
                     <input id="ghToken" placeholder="GitHub PAT 토큰" type="password">
-                    <small>토큰은 이 브라우저의 로컬 저장소에만 보관됩니다. 공개 장소/공용 PC에서는 사용하지 마세요.</small>
+                    <small>토큰은 이 브라우저의 로컬 저장소에만 보관됩니다. 공용 PC에서는 사용하지 마세요.</small>
                   </div>
                   <div class="notes-toolbar" style="margin-top:10px">
                     <button class="btn" id="ghSave" type="button">GitHub에 업로드</button>
@@ -199,156 +147,95 @@
     </div>
 
     <script>
-      document.getElementById('y').textContent = new Date().getFullYear();
-          // === Notes App (localStorage 기반) ===
-      (function(){
-        const STORAGE_KEY = 'notes-v1';
-        const state = { notes: {}, order: [], currentId: null, saveTimer: null };
-        const els = {
-          ul: document.getElementById('notesUl'),
-          title: document.getElementById('noteTitle'),
-          body: document.getElementById('noteBody'),
-          newBtn: document.getElementById('newNoteBtn'),
-          delBtn: document.getElementById('deleteBtn'),
-          exportBtn: document.getElementById('exportBtn'),
-          importFile: document.getElementById('importFile'),
-        };
+      // 연도 출력(없으면 건너뜀)
+      (function(){var y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();})();
 
+      // 안전한 선택자
+      const $ = (id)=>document.getElementById(id);
+
+      // 필수 요소 확인
+      const REQ = ['notesUl','noteTitle','noteBody','newNoteBtn','deleteBtn','exportBtn','importFile','ghOwner','ghRepo','ghBranch','ghPath','ghToken','ghSave','ghLoad','ghSignout'];
+      const READY = REQ.every(id => $(id));
+      if (!READY) { console.warn('Notes UI element missing. Paste whole HTML.'); }
+
+      if (READY) (function(){
+        // ---- Notes (localStorage)
+        const STORAGE_KEY='notes-v1';
+        const state={notes:{},order:[],currentId:null,timer:null};
+        const els={ul:$('notesUl'),title:$('noteTitle'),body:$('noteBody'),newBtn:$('newNoteBtn'),delBtn:$('deleteBtn'),exportBtn:$('exportBtn'),importFile:$('importFile')};
+
+        function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({notes:state.notes,order:state.order})); }
         function load(){
-          try{
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if(raw){ const data = JSON.parse(raw); Object.assign(state, {notes:data.notes||{}, order:data.order||[]}); }
-          }catch(e){ console.warn('Load failed', e); }
-          if(state.order.length===0){ createNote(); }
-          else { select(state.order[0]); }
-          renderList();
+          try{ const raw=localStorage.getItem(STORAGE_KEY); if(raw){ const d=JSON.parse(raw); state.notes=d.notes||{}; state.order=d.order||[]; } }catch(e){ console.warn(e); }
+          if(!state.order.length) createNote(); else select(state.order[0]); renderList();
         }
+        const uid=()=>('n_'+Math.random().toString(36).slice(2,9));
+        function createNote(){ const id=uid(); state.notes[id]={title:'새 메모',body:'',updated:Date.now()}; state.order.unshift(id); select(id); renderList(); persist(); }
+        function removeNote(id){ const i=state.order.indexOf(id); if(i>-1) state.order.splice(i,1); delete state.notes[id]; if(state.order.length) select(state.order[0]); else createNote(); renderList(); persist(); }
+        function select(id){ state.currentId=id; const n=state.notes[id]||{title:'',body:''}; els.title.value=n.title||''; els.body.value=n.body||''; renderList(); }
+        function renderList(){ els.ul.innerHTML=''; state.order.forEach(id=>{ const n=state.notes[id]; const li=document.createElement('li'); li.className=(state.currentId===id?'active':''); const span=document.createElement('span'); span.textContent=n.title||'제목 없음'; const small=document.createElement('small'); small.style.color='var(--muted)'; small.textContent=new Date(n.updated).toLocaleString(); li.append(span,small); li.onclick=()=>select(id); els.ul.appendChild(li); }); }
+        function scheduleSave(){ clearTimeout(state.timer); state.timer=setTimeout(()=>{ const id=state.currentId; if(!id) return; const n=state.notes[id]; if(!n) return; n.title=els.title.value.trim()||'제목 없음'; n.body=els.body.value; n.updated=Date.now(); state.order=[id].concat(state.order.filter(x=>x!==id)); renderList(); persist(); },400); }
 
-        function persist(){
-          const data = { notes: state.notes, order: state.order };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        els.newBtn.onclick=createNote;
+        els.delBtn.onclick=()=>{ if(state.currentId && confirm('이 메모를 삭제할까요?')) removeNote(state.currentId); };
+        els.title.oninput=scheduleSave; els.body.oninput=scheduleSave;
+
+        // 백업
+        els.exportBtn.onclick=()=>{ const blob=new Blob([JSON.stringify({notes:state.notes,order:state.order},null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='notes-backup.json'; a.click(); URL.revokeObjectURL(url); };
+        els.importFile.onchange=(e)=>{ const f=e.target.files?.[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const data=JSON.parse(r.result); state.notes=data.notes||{}; state.order=data.order||Object.keys(state.notes); select(state.order[0]); renderList(); persist(); alert('백업을 불러왔습니다.'); }catch(err){ alert('JSON 파싱 실패: '+err.message); } }; r.readAsText(f); };
+
+        // ---- GitHub Sync
+        const GH_KEY='notes-gh-config-v1';
+        const gh={ owner:$('ghOwner'), repo:$('ghRepo'), branch:$('ghBranch'), path:$('ghPath'), token:$('ghToken'), save:$('ghSave'), loadBtn:$('ghLoad'), signout:$('ghSignout') };
+
+        function ghLoadCfg(){ try{ const c=JSON.parse(localStorage.getItem(GH_KEY)||'{}'); ['owner','repo','branch','path','token'].forEach(k=>{ if(c[k]) gh[k].value=c[k]; }); }catch{} }
+        function ghSaveCfg(){ const c={ owner:gh.owner.value.trim(), repo:gh.repo.value.trim(), branch:(gh.branch.value.trim()||'main'), path:(gh.path.value.trim()||'notes.json'), token:gh.token.value.trim() }; localStorage.setItem(GH_KEY, JSON.stringify(c)); return c; }
+
+        function makeHeaders(token){
+          const h={Accept:'application/vnd.github+json'};
+          if (token) h.Authorization = 'Bearer '+token;
+          return h;
         }
-
-        function uid(){ return 'n_'+Math.random().toString(36).slice(2,9); }
-
-        function createNote(){
-          const id = uid();
-          state.notes[id] = { title: '새 메모', body: '', updated: Date.now() };
-          state.order.unshift(id);
-          select(id);
-          renderList();
-          persist();
+        async function getSha(cfg){
+          const url=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`;
+          const r=await fetch(url,{headers:makeHeaders(cfg.token)});
+          if(r.status===200){ const j=await r.json(); return j.sha; }
+          return null;
         }
+        function toBase64UTF8(str){ return btoa(unescape(encodeURIComponent(str))); }
+        function fromBase64UTF8(b64){ return decodeURIComponent(escape(atob(b64))); }
 
-        function removeNote(id){
-          const idx = state.order.indexOf(id);
-          if(idx>-1) state.order.splice(idx,1);
-          delete state.notes[id];
-          if(state.order.length){ select(state.order[0]); }
-          else { createNote(); }
-          renderList();
-          persist();
-        }
+        async function ghPush(){
+          const cfg=ghSaveCfg();
+          if(!cfg.owner||!cfg.repo||!cfg.branch||!cfg.path){ alert('owner/repo/branch/path를 확인하세요.'); return; }
+          if(!cfg.token){ alert('쓰기에는 토큰이 필요합니다.'); return; }
+          const content = toBase64UTF8(JSON.stringify({notes:state.notes,order:state.order},null,2));
+          const sha = await getSha(cfg);
+          const body={ message:'chore(notes): sync from web', content, branch:cfg.branch, committer:{name:'Notes App', email:'noreply@example.com'} };
+          if(sha) body.sha=sha;
 
-        function select(id){
-          state.currentId = id;
-          const n = state.notes[id];
-          els.title.value = n?.title || '';
-          els.body.value = n?.body || '';
-          renderList();
-        }
-
-        function renderList(){
-          els.ul.innerHTML = '';
-          state.order.forEach(id=>{
-            const n = state.notes[id];
-            const li = document.createElement('li');
-            li.className = state.currentId===id ? 'active' : '';
-            const span = document.createElement('span');
-            span.textContent = n.title || '제목 없음';
-            const small = document.createElement('small');
-            small.style.color='var(--muted)';
-            small.textContent = new Date(n.updated).toLocaleString();
-            li.appendChild(span); li.appendChild(small);
-            li.addEventListener('click', ()=> select(id));
-            els.ul.appendChild(li);
+          const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`,{
+            method:'PUT', headers:{...makeHeaders(cfg.token),'Content-Type':'application/json'}, body:JSON.stringify(body)
           });
+          if(r.ok){ alert('GitHub 업로드 완료!'); }
+          else { const t=await r.text(); alert('업로드 실패: '+t); }
         }
 
-        function scheduleSave(){
-          clearTimeout(state.saveTimer);
-          state.saveTimer = setTimeout(()=>{
-            const id = state.currentId; if(!id) return;
-            const n = state.notes[id]; if(!n) return;
-            n.title = els.title.value.trim() || '제목 없음';
-            n.body = els.body.value; n.updated = Date.now();
-            // 최신 순 정렬
-            state.order = state.order.filter(x=>x!==id); state.order.unshift(id);
-            renderList();
-            persist();
-          }, 400);
+        async function ghPull(){
+          const cfg=ghSaveCfg();
+          if(!cfg.owner||!cfg.repo||!cfg.branch||!cfg.path){ alert('owner/repo/branch/path를 확인하세요.'); return; }
+          const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`,{headers:makeHeaders(cfg.token)});
+          if(!r.ok){ const t=await r.text(); alert('불러오기 실패: '+t); return; }
+          const j=await r.json(); const text=fromBase64UTF8((j.content||'').replace(/\n/g,''));
+          try{ const data=JSON.parse(text); state.notes=data.notes||{}; state.order=data.order||Object.keys(state.notes); select(state.order[0]); renderList(); persist(); alert('GitHub에서 불러오기 완료!'); }
+          catch(e){ alert('JSON 파싱 실패: '+e.message); }
         }
 
-        // events
-        els.newBtn.addEventListener('click', createNote);
-        els.delBtn.addEventListener('click', ()=>{ if(state.currentId){ if(confirm('이 메모를 삭제할까요?')) removeNote(state.currentId); }});
-        els.title.addEventListener('input', scheduleSave);
-        els.body.addEventListener('input', scheduleSave);
+        function ghSignout(){ localStorage.removeItem(GH_KEY); ['owner','repo','branch','path','token'].forEach(k=> gh[k].value=''); alert('GitHub 동기화 설정을 초기화했습니다.'); }
 
-        els.exportBtn.addEventListener('click', ()=>{
-          const blob = new Blob([JSON.stringify({notes:state.notes, order:state.order}, null, 2)], {type:'application/json'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = 'notes-backup.json'; a.click();
-          URL.revokeObjectURL(url);
-        });
-        els.importFile.addEventListener('change', (e)=>{
-          const file = e.target.files[0]; if(!file) return;
-          const reader = new FileReader();
-          reader.onload = ()=>{
-            try{
-              const data = JSON.parse(reader.result);
-              state.notes = data.notes || {}; state.order = data.order || Object.keys(state.notes);
-              select(state.order[0]); renderList(); persist();
-            }catch(err){ alert('가져오기에 실패했습니다: '+err.message); }
-          };
-          reader.readAsText(file);
-        });
-
+        gh.save.onclick=ghPush; gh.loadBtn.onclick=ghPull; gh.signout.onclick=ghSignout; ghLoadCfg();
         load();
-
-        // === GitHub Sync ===
-        const GH_KEY = 'notes-gh-config-v1';
-        const ghEls = {
-          owner: document.getElementById('ghOwner'), repo: document.getElementById('ghRepo'),
-          branch: document.getElementById('ghBranch'), path: document.getElementById('ghPath'), token: document.getElementById('ghToken'),
-          save: document.getElementById('ghSave'), load: document.getElementById('ghLoad'), signout: document.getElementById('ghSignout'),
-        };
-        function ghLoadCfg(){ try{ const c=JSON.parse(localStorage.getItem(GH_KEY)||'{}');
-          ['owner','repo','branch','path','token'].forEach(k=>{ if(c[k]) ghEls[k].value=c[k]; }); }catch{}
-        }
-        function ghSaveCfg(){ const c={ owner:ghEls.owner.value.trim(), repo:ghEls.repo.value.trim(), branch:ghEls.branch.value.trim()||'main', path:ghEls.path.value.trim()||'notes.json', token:ghEls.token.value.trim()}; localStorage.setItem(GH_KEY, JSON.stringify(c)); return c; }
-        async function ghGetSha(cfg){ const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`,{headers:{Accept:'application/vnd.github+json', Authorization:`Bearer ${cfg.token}`}}); if(r.status===200){ const j=await r.json(); return j.sha; } return null; }
-        async function ghPush(){ const cfg=ghSaveCfg(); if(!cfg.owner||!cfg.repo||!cfg.token){ alert('owner, repo, token은 필수입니다.'); return; }
-          const data = { notes: state.notes, order: state.order };
-          const content = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
-          const sha = await ghGetSha(cfg);
-          const body = { message: 'chore(notes): sync from web', content, branch: cfg.branch, committer:{ name:'Notes App', email:'noreply@example.com' } };
-          if(sha) body.sha = sha;
-          const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`, { method:'PUT', headers:{ 'Accept':'application/vnd.github+json','Content-Type':'application/json', Authorization:`Bearer ${cfg.token}` }, body: JSON.stringify(body) });
-          if(r.ok){ alert('GitHub 업로드 완료!'); } else { const t=await r.text(); alert('실패: '+t); }
-        }
-        async function ghPull(){ const cfg=ghSaveCfg(); if(!cfg.owner||!cfg.repo){ alert('owner, repo가 필요합니다.'); return; }
-          const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`,{headers:{Accept:'application/vnd.github+json', Authorization: cfg.token?`Bearer ${cfg.token}`:undefined}});
-          if(!r.ok){ alert('불러오기 실패: '+(await r.text())); return; }
-          const j = await r.json(); const text = decodeURIComponent(escape(atob(j.content.replace(/
-/g,''))));
-          try{ const data = JSON.parse(text); state.notes = data.notes || {}; state.order = data.order || Object.keys(state.notes); select(state.order[0]); renderList(); persist(); alert('GitHub에서 불러오기 완료!'); }catch(e){ alert('JSON 파싱 실패: '+e.message); }
-        }
-        function ghSignout(){ localStorage.removeItem(GH_KEY); ['owner','repo','branch','path','token'].forEach(k=> ghEls[k].value=''); alert('GitHub 동기화 설정을 초기화했습니다.'); }
-        ghEls.save.addEventListener('click', ghPush); ghEls.load.addEventListener('click', ghPull); ghEls.signout.addEventListener('click', ghSignout); ghLoadCfg();
       })();
-
     </script>
   </body>
 </html>
