@@ -89,7 +89,13 @@
       .notes-list li.active{background:rgba(96,165,250,.12)}
       .notes-editor .title{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:var(--text);margin-bottom:10px}
       .notes-editor textarea{width:100%;min-height:260px;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:#cbd5e1;resize:vertical}
-      .notes-toolbar{display:flex;gap:8px;margin:10px 0 0}
+      .notes-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+      .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));color:var(--text);cursor:pointer}
+      .btn.danger{background:linear-gradient(135deg, rgba(239,68,68,.25), rgba(239,68,68,.15));}
+      .gh-card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));border:1px solid rgba(148,163,184,.15);border-radius:16px;padding:12px}
+      .gh-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+      .gh-grid input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:#0b1324;color:var(--text)}
+      .gh-grid small{grid-column:1/-1;color:var(--muted)}
       .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.25);background:linear-gradient(135deg, rgba(96,165,250,.15), rgba(52,211,153,.15));color:var(--text);cursor:pointer}
       .btn.danger{background:linear-gradient(135deg, rgba(239,68,68,.25), rgba(239,68,68,.15));}
 
@@ -145,9 +151,10 @@
           <h2>연락</h2>
           <p>문의: <a href="mailto:you@example.com">you@example.com</a></p>
         </section>
-              <section id="notes" class="section">
+
+        <section id="notes" class="section">
           <h2>메모장</h2>
-          <p class="muted">브라우저에 자동 저장됩니다(로컬 저장소). 기기/브라우저를 바꾸면 보이지 않을 수 있어요.</p>
+          <p class="muted">브라우저에 자동 저장됩니다(로컬 저장소). 여러 기기에서 보려면 아래 <strong>GitHub 동기화</strong>를 설정하세요.</p>
           <div class="notes-app">
             <div class="notes-list card">
               <div class="notes-list-header">
@@ -164,6 +171,24 @@
                 <label class="btn" for="importFile">백업 불러오기</label>
                 <input id="importFile" type="file" accept="application/json" style="display:none" />
                 <button class="btn danger" id="deleteBtn" type="button">삭제</button>
+              </div>
+              <div class="gh-card" style="margin-top:12px">
+                <details>
+                  <summary>🔄 GitHub 동기화 설정 (접어서 보기)</summary>
+                  <div class="gh-grid" style="margin-top:10px">
+                    <input id="ghOwner" placeholder="owner (예: kjd1374)">
+                    <input id="ghRepo" placeholder="repo (예: newpage)">
+                    <input id="ghBranch" placeholder="branch (예: main)" value="main">
+                    <input id="ghPath" placeholder="path (예: notes.json)" value="notes.json">
+                    <input id="ghToken" placeholder="GitHub PAT 토큰" type="password">
+                    <small>토큰은 이 브라우저의 로컬 저장소에만 보관됩니다. 공개 장소/공용 PC에서는 사용하지 마세요.</small>
+                  </div>
+                  <div class="notes-toolbar" style="margin-top:10px">
+                    <button class="btn" id="ghSave" type="button">GitHub에 업로드</button>
+                    <button class="btn" id="ghLoad" type="button">GitHub에서 불러오기</button>
+                    <button class="btn danger" id="ghSignout" type="button">설정 초기화</button>
+                  </div>
+                </details>
               </div>
             </div>
           </div>
@@ -291,6 +316,37 @@
         });
 
         load();
+
+        // === GitHub Sync ===
+        const GH_KEY = 'notes-gh-config-v1';
+        const ghEls = {
+          owner: document.getElementById('ghOwner'), repo: document.getElementById('ghRepo'),
+          branch: document.getElementById('ghBranch'), path: document.getElementById('ghPath'), token: document.getElementById('ghToken'),
+          save: document.getElementById('ghSave'), load: document.getElementById('ghLoad'), signout: document.getElementById('ghSignout'),
+        };
+        function ghLoadCfg(){ try{ const c=JSON.parse(localStorage.getItem(GH_KEY)||'{}');
+          ['owner','repo','branch','path','token'].forEach(k=>{ if(c[k]) ghEls[k].value=c[k]; }); }catch{}
+        }
+        function ghSaveCfg(){ const c={ owner:ghEls.owner.value.trim(), repo:ghEls.repo.value.trim(), branch:ghEls.branch.value.trim()||'main', path:ghEls.path.value.trim()||'notes.json', token:ghEls.token.value.trim()}; localStorage.setItem(GH_KEY, JSON.stringify(c)); return c; }
+        async function ghGetSha(cfg){ const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`,{headers:{Accept:'application/vnd.github+json', Authorization:`Bearer ${cfg.token}`}}); if(r.status===200){ const j=await r.json(); return j.sha; } return null; }
+        async function ghPush(){ const cfg=ghSaveCfg(); if(!cfg.owner||!cfg.repo||!cfg.token){ alert('owner, repo, token은 필수입니다.'); return; }
+          const data = { notes: state.notes, order: state.order };
+          const content = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+          const sha = await ghGetSha(cfg);
+          const body = { message: 'chore(notes): sync from web', content, branch: cfg.branch, committer:{ name:'Notes App', email:'noreply@example.com' } };
+          if(sha) body.sha = sha;
+          const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`, { method:'PUT', headers:{ 'Accept':'application/vnd.github+json','Content-Type':'application/json', Authorization:`Bearer ${cfg.token}` }, body: JSON.stringify(body) });
+          if(r.ok){ alert('GitHub 업로드 완료!'); } else { const t=await r.text(); alert('실패: '+t); }
+        }
+        async function ghPull(){ const cfg=ghSaveCfg(); if(!cfg.owner||!cfg.repo){ alert('owner, repo가 필요합니다.'); return; }
+          const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${encodeURIComponent(cfg.branch)}`,{headers:{Accept:'application/vnd.github+json', Authorization: cfg.token?`Bearer ${cfg.token}`:undefined}});
+          if(!r.ok){ alert('불러오기 실패: '+(await r.text())); return; }
+          const j = await r.json(); const text = decodeURIComponent(escape(atob(j.content.replace(/
+/g,''))));
+          try{ const data = JSON.parse(text); state.notes = data.notes || {}; state.order = data.order || Object.keys(state.notes); select(state.order[0]); renderList(); persist(); alert('GitHub에서 불러오기 완료!'); }catch(e){ alert('JSON 파싱 실패: '+e.message); }
+        }
+        function ghSignout(){ localStorage.removeItem(GH_KEY); ['owner','repo','branch','path','token'].forEach(k=> ghEls[k].value=''); alert('GitHub 동기화 설정을 초기화했습니다.'); }
+        ghEls.save.addEventListener('click', ghPush); ghEls.load.addEventListener('click', ghPull); ghEls.signout.addEventListener('click', ghSignout); ghLoadCfg();
       })();
 
     </script>
